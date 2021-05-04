@@ -1,17 +1,16 @@
-<html>
-    <title>
-        Booking System
-    </title>
-    <body>
-
-        
-        <h1> this is our hotel project</h1>
-        <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc eu vulputate eros. Mauris in pharetra nulla, et feugiat sapien. Etiam dictum, mauris ac malesuada tempus, leo metus vulputate mauris, vitae porta urna est ultrices urna. Nullam efficitur, tortor in fermentum viverra, risus ante bibendum lorem, commodo pulvinar ante orci non ligula. Donec vitae sapien ac risus placerat lobortis ut in enim. Nunc vestibulum non elit ut commodo. Etiam faucibus ullamcorper suscipit. Phasellus volutpat suscipit metus, sed mattis turpis ultricies vel. Proin a tortor sit amet risus dignissim ullamcorper. Mauris egestas auctor vestibulum. Maecenas ac ex sodales, rhoncus magna id, cursus mi. Mauris tristique nibh et massa laoreet, ac auctor urna porttitor. Duis posuere velit massa, sed dignissim tellus varius id. Praesent pretium neque at lorem pharetra cursus.</p>
-
-
-        
-        <h1> this is our hotel project</h1>
-
+{% extends 'bootstrap/base.html'%}
+<!-- title block -->
+{% block title %}
+    Hotel Booking App
+{% endblock %}
+<!-- Styles block -->
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css')}}">
     
-    </body>
-</html>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/font-awesome.min.css')}}">
+{% endblock %}
+<!-- Navbar block  -->
+{% block navbar %}
+    {% include 'navbar.html' %}
+{% endblock %}

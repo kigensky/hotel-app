@@ -1,0 +1,35 @@
+.bg-navbar{
+    background-color: #5E5C99;
+}
+body{
+    background-color: #F7F7F7;
+    font-family: 'Ledger', serif;
+}
+.container{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.card{
+    border-radius: 0;
+}
+.subscribe{
+    border: 1px solid rgba(0,0,0,.125);
+    width: 100%;
+    border-radius: 0;
+}
+.btn-subscribe{
+    background-color: #5E5C99;
+    border-radius: 0;
+    color: aliceblue;
+}
+.navbar-brand,.nav-link{
+    color: aliceblue !important;
+}
+.a-profile{
+    font-weight: bold;
+    text-decoration: none;
+}
+.prof-dropdown{
+         background-color: #eee;
+         min-width: 7rem;
+}

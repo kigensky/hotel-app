@@ -34,3 +34,17 @@ class User(db.Model, UserMixin):
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+
+class Room(db.Model):
+    __tablename__ = 'rooms'
+
+    id = db.Column(db.Integer,primary_key = True)
+    classification = db.Column(db.String(255), unique = True)
+    details = db.Column(db.Text)
+    cost = db.Column(db.String(255))
+    units = db.Column(db.Integer)
+    image = db.Column(db.Text)
+
+    def __repr__(self):
+        return f'Room {self.classification} {self.cost} {self.units}'

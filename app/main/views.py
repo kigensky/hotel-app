@@ -52,11 +52,6 @@ def addroom():
     return render_template('addroom.html',  room_form=form)
 
 
-@main.route('/deleteroom/<id>')
-@login_required
-def deleteroom(id):
-    pass
-
 
 @main.route('/editroom/<id>', methods = ["GET","POST"])
 @login_required
@@ -98,5 +93,22 @@ def editroom(id):
 
     return render_template('addroom.html',  room_form=form)
 
+
+
+@main.route('/deleteroom/<id>')
+@login_required
+def deleteroom(id):
+    if current_user.isAdmin() == False:         #check if user is admin
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    room = Room.query.get(int(id))
+
+    db.session.delete(room)
+    db.session.commit()
+
+    flash('Room deleted successfully','success')
+
+    return redirect( url_for('main.home'))
 
 

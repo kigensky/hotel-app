@@ -10,6 +10,8 @@ from .. import db
 # from ..requests import get_quote
 # from ..email import welcome_message, notification_message
 
+choices = [('','-select-'),('executive','Executive'),('suite','Suite'),('single room','Single Room'),('double room','Double Room')]
+
 @main.route("/")
 def home():
     rooms = Room.query.all()
@@ -29,7 +31,7 @@ def addroom():
         return redirect( url_for('main.home'))
         
     form = RoomForm()
-    form.classification.choices=[('','-select-'),('executive','Executive'),('suite','Suite')]
+    form.classification.choices=choices
 
     if form.validate_on_submit():
         room = Room(classification=form.classification.data,
@@ -48,3 +50,65 @@ def addroom():
         return redirect( url_for('main.home'))
 
     return render_template('addroom.html',  room_form=form)
+
+
+
+@main.route('/editroom/<id>', methods = ["GET","POST"])
+@login_required
+def editroom(id):
+    if current_user.isAdmin() == False:         #check if user is admin
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    room = Room.query.get(int(id))
+
+    form = RoomForm()
+    form.classification.choices=choices
+    # form.classification.render_kw = {'disabled': 'disabled'}
+    form.classification(disabled='disabled')
+
+    
+
+    if form.validate_on_submit():
+        room = Room.query.get(int(id))
+        room.classification=form.classification.data
+        room.details=form.details.data
+        room.cost=form.cost.data
+        room.units=form.units.data
+                    
+        filename = photos.save(form.image.data)
+        path = f'photos/{filename}'
+        room.image = path
+
+        db.session.add(room)
+        db.session.commit()
+        
+        flash('Edit was successful','success')
+        return redirect( url_for('main.home'))
+
+    form.classification.data = room.classification
+    form.details.data = room.details
+    form.cost.data = room.cost
+    form.units.data = room.units
+
+    return render_template('addroom.html',  room_form=form)
+
+
+
+@main.route('/deleteroom/<id>')
+@login_required
+def deleteroom(id):
+    if current_user.isAdmin() == False:         #check if user is admin
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    room = Room.query.get(int(id))
+
+    db.session.delete(room)
+    db.session.commit()
+
+    flash('Room deleted successfully','success')
+
+    return redirect( url_for('main.home'))
+
+

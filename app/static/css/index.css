@@ -38,3 +38,6 @@ body{
 .card{
     border: 1px solid rgba(135,29,39,0.2)
 }
+.img-room{
+    height: 220px;
+}

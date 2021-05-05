@@ -9,6 +9,7 @@ class Config:
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+    UPLOADED_PHOTOS_DEST ='app/static/photos'
     
     
 class ProdConfig(Config):
@@ -33,7 +34,8 @@ class DevConfig(Config):
     Args:
         Config: The parent configuration class with General configuration settings
     '''
-    SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
+    #SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
+    SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://kenneth:admin@localhost/hotelapp'
     
     
     DEBUG = True

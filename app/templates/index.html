@@ -1,7 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <h1> lorem ipsum </h1>
+    <!--Flash message -->
+    {% for category,message in get_flashed_messages(with_categories=true) %}
+    <div class="alert my-2 mx-auto alert-{{category}}">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+    </div>
+    {% endfor %}
+    <!-- add room link -->
+    {% if current_user.is_authenticated %}
+      {% if user.isAdmin() %}
+      
+            <div class="float-right">
+              <a href="{{ url_for('main.addroom')}}" class="btn btn-sm btn-info" target="_blank">
+                Add Room
+                <i class="fa fa-plus-circle ml-1" aria-hidden="true"></i>
+              </a>
+            </div>
+      {% endif %}
+    {%endif%}
+    <hr>
+    <!-- render rooms -->
+    <h3>Our Rooms</h3>
+    <div class="row">
+        {% for room in rooms %}
+        <div class="col-md-6">
+            <div class="card mb-3" style="width: 100%;">
+                <img class="img-fluid" src="{{url_for('static',filename=room.image)}}" alt="{{room.classification}}">
+                <div class="card-body">
+                    <h4>{{ room.classification | capitalize }}</h4>
+                    <p>Cost per unit(Ksh): <strong>{{room.cost}}</strong></p>
+                    <p>No. of Units: <strong>{{room.units}}</strong></p>
+                    <p class="card-text">{{room.details | truncate(50)}}</p>
+                    {% if room.details | length>100 %}
+                    <a href="#"  data-toggle="modal" data-target="#modal-{{room.id}}">Readmore>>>>>>>></a>
+                    {%endif%}
+                    
+                    <a class="btn btn-sm btn-outline-info btn-block text-center" target="_blank" href="#">
+                      Book
+                    </a>
+                    
+                </div>
+            </div>
+          </div>
+          {% include '_more_details.html' %}
+        {% endfor %}
+      </div>
+    <!-- end render rooms -->
 </div>
 
 {% endblock %}

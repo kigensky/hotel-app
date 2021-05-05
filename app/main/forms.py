@@ -1,12 +1,17 @@
 from flask_wtf import FlaskForm
 # from validator import (StringField, TextAreaField,SubmitField, SelectField)
-from wtforms import (StringField, TextAreaField,SubmitField, SelectField)
-from wtforms.validators import Required
+from wtforms import StringField, TextAreaField,SubmitField, SelectField,IntegerField
+from wtforms.validators import Required, DataRequired
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from .. import photos
 
-class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    content = TextAreaField('Content', validators=[DataRequired()])
-    submit = SubmitField('Post')
+class RoomForm(FlaskForm):
+    classification = SelectField('Classification',validators=[DataRequired()])
+    details = TextAreaField('More Details', validators=[DataRequired()])
+    cost = IntegerField('Cost per Unit', validators=[DataRequired()])
+    units = IntegerField('No. of Units', validators=[DataRequired()])
+    image = FileField('Upload image',validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])  
+    submit = SubmitField('Add Room')
 
 class UpdatePostForm(FlaskForm):
     title = StringField("Blog title", validators=[Required()])

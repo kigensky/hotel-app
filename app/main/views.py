@@ -12,13 +12,15 @@ from .. import db
 
 @main.route("/")
 def home():
-    return render_template("index.html")
+    rooms = Room.query.all()
+
+    return render_template("index.html", rooms=rooms)
 
 
 @main.route('/addroom', methods = ["GET","POST"])
 @login_required
 def addroom():
-    if current_user.isAdmin() == False:
+    if current_user.isAdmin() == False:         #check if user is admin
         flash('Permission denied.','danger')
         return redirect( url_for('main.home'))
         
@@ -37,5 +39,8 @@ def addroom():
 
         db.session.add(room)
         db.session.commit()
+        
+        flash('Room added successfully','success')
+        return redirect( url_for('main.home'))
 
     return render_template('addroom.html',  room_form=form)

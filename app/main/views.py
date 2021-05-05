@@ -14,7 +14,11 @@ from .. import db
 def home():
     rooms = Room.query.all()
 
-    return render_template("index.html", rooms=rooms)
+    user= None
+    if current_user.is_authenticated:
+        user = User.query.get(int(current_user.id))
+
+    return render_template("index.html", rooms=rooms, user=user)
 
 
 @main.route('/addroom', methods = ["GET","POST"])

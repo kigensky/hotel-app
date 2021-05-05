@@ -1,0 +1,22 @@
+<!-- Modal -->
+<div class="modal fade" id="modal-{{room.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content p-3">
+        <div class="card mb-3" style="width: 100%;">
+            <img class="img-fluid" src="{{url_for('static',filename=room.image)}}" alt="{{room.classification}}">
+            <div class="card-body">
+                <h4>{{ room.classification | capitalize }}</h4>
+                <p>Cost per unit(Ksh): <strong>{{room.cost}}</strong></p>
+                <p>No. of Units: <strong>{{room.units}}</strong></p>
+                <p class="card-text">{{room.details }}</p>
+               
+                
+                <a class="btn btn-sm btn-outline-info btn-block text-center" target="_blank" href="#">
+                  Book
+                </a>
+                
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>

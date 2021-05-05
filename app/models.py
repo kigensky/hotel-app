@@ -24,11 +24,24 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.pass_secure,password)
  
     def isAdmin(self):
+        '''return true if user is admin otherwise false'''
+
         user = User.query.get(int(self.id))
         if user.role == 'admin':
             return True
         else:
             return False
+
+
+    def isCustomer(self):
+        '''return true if user is customer otherwise false'''
+        
+        user = User.query.get(int(self.id))
+        if user.role == 'customer':
+            return True
+        else:
+            return False
+
 
     def __repr__(self):
         return f'User {self.username} {self.email}'

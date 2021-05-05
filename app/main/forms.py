@@ -6,7 +6,7 @@ from flask_wtf.file import FileField, FileRequired, FileAllowed
 from .. import photos
 
 class RoomForm(FlaskForm):
-    classification = SelectField('Classification',validators=[DataRequired()])
+    classification = SelectField('Room Classification',validators=[DataRequired()])
     details = TextAreaField('More Details', validators=[DataRequired()])
     cost = IntegerField('Cost per Unit', validators=[DataRequired()])
     units = IntegerField('No. of Units', validators=[DataRequired()])

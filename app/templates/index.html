@@ -27,7 +27,7 @@
         {% for room in rooms %}
         <div class="col-md-6">
             <div class="card mb-3" style="width: 100%;">
-                <img class="img-fluid" src="{{url_for('static',filename=room.image)}}" alt="{{room.classification}}">
+                <img class="img-fluid img-room" src="{{url_for('static',filename=room.image)}}" alt="{{room.classification}}" >
                 <div class="card-body">
                     <h4>{{ room.classification | capitalize }}</h4>
                     <p>Cost per unit(Ksh): <strong>{{room.cost}}</strong></p>
@@ -36,10 +36,22 @@
                     {% if room.details | length>100 %}
                     <a href="#"  data-toggle="modal" data-target="#modal-{{room.id}}">Readmore>>>>>>>></a>
                     {%endif%}
-                    
-                    <a class="btn btn-sm btn-outline-info btn-block text-center" target="_blank" href="#">
-                      Book
-                    </a>
+                    <p>
+                      <a class="btn btn-sm btn-outline-info btn-block text-center" target="_blank" href="#">
+                        Book
+                      </a>
+                    </p>
+                   
+                    <p class="mt-2">
+                      <a class="btn btn-sm btn-warning text-center float-left" target="_blank" href="{{ url_for('main.editroom',id=room.id)}}">
+                        <i class="fa fa-pencil-square-o mr-1" aria-hidden="true"></i>
+                        Edit
+                      </a>
+                      <a class="btn btn-sm btn-danger text-center float-right" target="_blank" href="#"  onclick="return confirm('Confirm room Delete')">
+                        <i class="fa fa-trash-o mr-1" aria-hidden="true"></i>
+                        Delete
+                      </a>
+                    </p>
                     
                 </div>
             </div>

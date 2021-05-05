@@ -22,13 +22,14 @@ class User(db.Model, UserMixin):
         self.pass_secure = generate_password_hash(password)
     def verify_password(self,password):
         return check_password_hash(self.pass_secure,password)
-    @classmethod
-    def isAdmin(cls,id):
-        user = cls.query.get(int(id))
+ 
+    def isAdmin(self):
+        user = User.query.get(int(self.id))
         if user.role == 'admin':
             return True
         else:
-            False
+            return False
+
     def __repr__(self):
         return f'User {self.username} {self.email}'
 @login_manager.user_loader

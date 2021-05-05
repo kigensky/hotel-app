@@ -8,6 +8,7 @@ from .. import photos
 class RoomForm(FlaskForm):
     classification = SelectField('Classification',validators=[DataRequired()])
     details = TextAreaField('More Details', validators=[DataRequired()])
+    cost = IntegerField('Cost per Unit', validators=[DataRequired()])
     units = IntegerField('No. of Units', validators=[DataRequired()])
     image = FileField('Upload image',validators=[FileAllowed(photos, 'Image only!'), FileRequired('File was empty!')])  
     submit = SubmitField('Add Room')

@@ -16,10 +16,11 @@ class RoomForm(FlaskForm):
 
 class BookingForm(FlaskForm):
     units = IntegerField('No. of Units', validators=[DataRequired()])
-    from_date = DateField('Start Date', format='%m/%d/%Y', validators=[DataRequired()])
-    to_date = DateField('End Date', format='%m/%d/%Y', validators=[DataRequired()])
+    from_date = DateField('Check-In',  validators=[DataRequired()])
+    to_date = DateField('Check-Out',  validators=[DataRequired()])
     submit = SubmitField("Book")
 
+# format='%m/%d/%Y',
 # class CommentForm(FlaskForm):
 #     comment = TextAreaField("Post Comment", validators=[Required()])
 #     alias = StringField("Comment Alias")

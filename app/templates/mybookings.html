@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <!--Flash message -->
+    {% for category,message in get_flashed_messages(with_categories=true) %}
+    <div class="alert my-2 mx-auto alert-{{category}}">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+    </div>
+    {% endfor %}
+  
+   
+    <!-- render rooms -->
+    <h3>My Bookings</h3><hr>
+    <div class="row">
+        {% for booking in bookings %}
+        <div class="col-md-6">
+            <div class="card mb-3" style="width: 100%;">
+                <img class="img-fluid img-room" src="{{url_for('static',filename=booking.room.image)}}" alt="{{booking.room.classification}}" >
+                <div class="card-body">
+                    <h4>{{ booking.room.classification | capitalize }}</h4>
+                    
+                    <p>No. of Units Booked: <strong>{{booking.units}}</strong></p>
+                    <p>Total Cost(Ksh): <strong>{{booking.cost}}</strong></p>
+                    <p>Check-in: <strong>{{booking.from_date}}</strong></p>
+                    <p>Check-out: <strong>{{booking.to_date}}</strong></p>
+                    
+                   
+                      
+
+
+                   
+                      <p class="mt-2">
+                        <a class="btn btn-sm btn-warning text-center float-left" target="_blank" href="{{ url_for('main.editbooking',id=booking.id)}}">
+                          <i class="fa fa-pencil-square-o mr-1" aria-hidden="true"></i>
+                          Edit
+                        </a>
+                        <a class="btn btn-sm btn-danger text-center float-right" href="{{url_for('main.deletebooking',id=booking.id)}}"  onclick="return confirm('Confirm Delete')">
+                          <i class="fa fa-trash-o mr-1" aria-hidden="true"></i>
+                          Delete
+                        </a>
+                      </p>
+                   
+                    
+                </div>
+            </div>
+          </div>
+         
+        {% endfor %}
+      </div>
+    <!-- end render rooms -->
+</div>
+
+{% endblock %}

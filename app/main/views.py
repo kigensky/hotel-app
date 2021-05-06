@@ -1,12 +1,13 @@
 from flask import render_template, request, redirect, url_for, abort,flash
 from . import main
-from ..models import User, Room
+from ..models import User, Room, Booking
 from .. import photos
 from flask_login import login_required, current_user
 from .forms import RoomForm, BookingForm
 # from datetime import datetime
 # import bleach
 from .. import db
+from datetime import datetime
 # from ..requests import get_quote
 # from ..email import welcome_message, notification_message
 
@@ -116,7 +117,163 @@ def deleteroom(id):
 @main.route('/book/<id>', methods = ["GET","POST"])
 @login_required
 def book(id):
+    if current_user.isCustomer() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
     form = BookingForm()
+
+    if form.validate_on_submit():
+        
+        room = Room.query.get(int(id))
+
+        available_rooms = int(room.units) - int(room.get_booked_units()) #check available rooms
+
+        if int(form.units.data) <= available_rooms:
+            from_date_timestamp = datetime.strptime(str(form.from_date.data),'%Y-%m-%d' ).timestamp()
+            to_date_timestamp = datetime.strptime(str(form.to_date.data),'%Y-%m-%d' ).timestamp()
+            timestamp_diff = to_date_timestamp - from_date_timestamp
+
+            days_stayed = int(timestamp_diff)//86400  #one day = 86400 sec
+            
+            total_cost = int(room.cost) * days_stayed * int(form.units.data)    # cost of room*day_stayed*units booked
+
+            booking = Booking(units= form.units.data,
+                              cost=total_cost,
+                              from_date=datetime.fromtimestamp(int(from_date_timestamp)).strftime('%d-%m-%Y'),
+                              to_date = datetime.fromtimestamp(int(to_date_timestamp)).strftime('%d-%m-%Y'),
+                              rooms_id = room.id,
+                              users_id = current_user.id,
+                              created_at = datetime.today().strftime('%d-%m-%Y %H:%M'))
+
+
+            db.session.add(booking)
+            db.session.commit()
+
+            flash('Booking was successful','success')
+
+            return redirect(url_for('main.mybookings',id=current_user.id))
+        else:
+            flash('Either rooms are fully booked or you are booking more than available units','danger')
+
     return render_template('booking.html', booking_form = form)
 
 
+
+@main.route('/mybookings/<id>')
+@login_required
+def mybookings(id):
+    if current_user.isCustomer() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+
+    bookings = Booking.query.filter_by(users_id = int(id)).all()
+
+
+    return render_template('mybookings.html', bookings=bookings)
+
+
+
+@main.route('/editbooking/<id>',methods = ["GET","POST"])
+@login_required
+def editbooking(id):
+    if current_user.isCustomer() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    booking = Booking.query.get(int(id))
+
+    form = BookingForm()    
+    form.units.data = booking.units
+    form.from_date.data = datetime.strptime(booking.from_date ,'%d-%m-%Y' )
+    form.to_date.data = datetime.strptime(booking.to_date ,'%d-%m-%Y' )
+
+    previous_units = booking.units
+
+    if form.validate_on_submit():
+        if form.units.data > (booking.room.units - booking.room.get_booked_units()+ previous_units ):
+            flash('You are booking more than available units','danger')
+
+            return redirect( url_for('main.home'))
+        else:
+            from_date_timestamp = datetime.strptime(str(form.from_date.data),'%Y-%m-%d  %H:%M:%S' ).timestamp()
+            to_date_timestamp = datetime.strptime(str(form.to_date.data),'%Y-%m-%d  %H:%M:%S' ).timestamp()
+            timestamp_diff = to_date_timestamp - from_date_timestamp
+
+            days_stayed = int(timestamp_diff)//86400  #one day = 86400 sec
+            
+            total_cost = int(booking.room.cost) * days_stayed * int(form.units.data)    # cost of room*day_stayed*units booked
+
+            # booking = Booking.query.filter_by(id=int(id)).update({'units': form.units.data,
+            #                                             'cost':total_cost,
+            #                                             'from_date':datetime.fromtimestamp(int(from_date_timestamp)).strftime('%d-%m-%Y'),
+            #                                             'to_date': datetime.fromtimestamp(int(to_date_timestamp)).strftime('%d-%m-%Y'),
+            #                                             'created_at': datetime.today().strftime('%d-%m-%Y %H:%M')})
+            booking = Booking.query.get(int(id))
+            booking.units= form.units.data
+            booking.cost=total_cost
+            booking.from_date=datetime.fromtimestamp(int(from_date_timestamp)).strftime('%d-%m-%Y')
+            booking.to_date = datetime.fromtimestamp(int(to_date_timestamp)).strftime('%d-%m-%Y')
+            # rooms_id = booking.rooms_id,
+            # users_id = current_user.id,
+            booking.created_at = datetime.today().strftime('%d-%m-%Y %H:%M')
+
+
+            db.session.add(booking)
+            db.session.commit()
+
+            flash('Update was successful','success')
+
+            return redirect(url_for('main.mybookings',id=current_user.id))
+
+
+    return render_template('booking.html',booking_form = form)
+
+
+
+@main.route('/deletebooking/<id>')
+@login_required
+def deletebooking(id):
+    if current_user.isCustomer() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    booking = Booking.query.get(int(id))
+
+    db.session.delete(booking)
+    db.session.commit()
+
+    flash('Booking deleted successfully','success')
+
+    return redirect(url_for('main.mybookings',id=current_user.id))
+
+
+
+@main.route('/allbookings')
+@login_required
+def allbookings():
+    if current_user.isAdmin() == False:         #check if user is or isnt admin
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    bookings = Booking.query.all()
+    
+
+    return render_template('allbookings.html',bookings=bookings)
+
+@main.route('/admindeletebooking/<id>')
+@login_required
+def admindeletebooking(id):
+    if current_user.isAdmin() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    booking = Booking.query.get(int(id))
+
+    db.session.delete(booking)
+    db.session.commit()
+
+    flash('Booking deleted successfully','success')
+
+    return redirect(url_for('main.allbookings'))

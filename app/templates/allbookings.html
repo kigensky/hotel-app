@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <!--Flash message -->
+    {% for category,message in get_flashed_messages(with_categories=true) %}
+    <div class="alert my-2 mx-auto alert-{{category}}">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {{ message }}
+    </div>
+    {% endfor %}
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+              <th scope="col">Customer</th>
+            <th scope="col">Classification</th>
+            <th scope="col">Units Booked</th>
+            <th scope="col">Check-In</th>
+            <th scope="col">Check-Out</th>
+            <th scope="col"> Email</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for booking in bookings %}
+            <tr>
+                <td>{{ booking.user.username | capitalize }}</td>
+                <td>{{ booking.room.classification | capitalize }}</td>
+                <td>{{booking.units}}</td>
+                <td>{{booking.from_date}}</td>
+                <td>{{booking.to_date}}</td>
+                <td>{{booking.user.email}}</td>
+                <td>
+                        <a href="{{url_for('main.admindeletebooking',id=booking.id)}}" class="btn btn-sm btn-danger"   onclick="return confirm('Confirm Delete')">
+                            Delete
+                            <i class="fa fa-trash-o ml-1" aria-hidden="true"></i>
+                        </a>
+                </td>
+            </tr>
+          {%endfor%}
+        
+        </tbody>
+      </table>
+</div>
+
+{%endblock%}

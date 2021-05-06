@@ -11,18 +11,30 @@
     <!-- add room link -->
     {% if current_user.is_authenticated %}
       {% if user.isAdmin() %}
-      
+            <div class="float-right ml-2">
+              <a href="{{ url_for('main.allbookings')}}" class="btn btn-sm btn-info" target="_blank">
+                Bookings
+                <i class="fa fa-bed" aria-hidden="true"></i>
+              </a>
+            </div>
             <div class="float-right">
               <a href="{{ url_for('main.addroom')}}" class="btn btn-sm btn-info" target="_blank">
                 Add Room
                 <i class="fa fa-plus-circle ml-1" aria-hidden="true"></i>
               </a>
             </div>
+      {% elif user.isCustomer() %}
+          <div class="float-right">
+              <a href="{{ url_for('main.mybookings',id=user.id)}}" class="btn btn-sm btn-info">
+                My Bookings
+                <i class="fa fa-bed" aria-hidden="true"></i>
+              </a>
+            </div>
       {% endif %}
     {%endif%}
     <hr>
     <!-- render rooms -->
-    <h3>Our Rooms</h3>
+    <h3>Our Rooms</h3> <hr>
     <div class="row">
         {% for room in rooms %}
         <div class="col-md-6">
@@ -31,18 +43,19 @@
                 <div class="card-body">
                     <h4>{{ room.classification | capitalize }}</h4>
                     <p>Cost per unit(Ksh): <strong>{{room.cost}}</strong></p>
-                    <p>No. of Units: <strong>{{room.units}}</strong></p>
+                    <p>No. of Units Available: <strong>{{room.units - room.get_booked_units()}}</strong></p>
                     <p class="card-text">{{room.details | truncate(50)}}</p>
                     {% if room.details | length>100 %}
                     <a href="#"  data-toggle="modal" data-target="#modal-{{room.id}}">Readmore>>>>>>>></a>
                     {%endif%}
                    
+                   {% if (room.units - room.get_booked_units()) > 0 %}
                         <p>
                           <a class="btn btn-sm btn-outline-info btn-block text-center" target="_blank" href="{{ url_for('main.book',id=room.id)}}">
                             Book
                           </a>
                         </p>
-                   
+                   {%endif%}
 
 
                     {% if current_user.is_authenticated %}

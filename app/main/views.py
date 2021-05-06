@@ -117,6 +117,10 @@ def deleteroom(id):
 @main.route('/book/<id>', methods = ["GET","POST"])
 @login_required
 def book(id):
+    if current_user.isCustomer() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
     form = BookingForm()
 
     if form.validate_on_submit():
@@ -147,9 +151,24 @@ def book(id):
             db.session.commit()
 
             flash('Booking was successful','success')
+
+            return redirect(url_for('main.mybookings',id=current_user.id))
         else:
             flash('Either rooms are fully booked or you are booking more than available units','danger')
 
     return render_template('booking.html', booking_form = form)
 
 
+
+@main.route('/mybookings/<id>')
+@login_required
+def mybookings(id):
+    if current_user.isCustomer() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+
+    bookings = Booking.query.filter_by(users_id = int(id)).all()
+
+
+    return render_template('mybookings.html', bookings=bookings)

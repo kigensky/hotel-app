@@ -16,8 +16,8 @@ class RoomForm(FlaskForm):
 
 class BookingForm(FlaskForm):
     units = IntegerField('No. of Units', validators=[DataRequired()])
-    from_date = DateField('Start Date',  validators=[DataRequired()])
-    to_date = DateField('End Date',  validators=[DataRequired()])
+    from_date = DateField('Check-In',  validators=[DataRequired()])
+    to_date = DateField('Check-Out',  validators=[DataRequired()])
     submit = SubmitField("Book")
 
 # format='%m/%d/%Y',

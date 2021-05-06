@@ -7,13 +7,16 @@
             <div class="card-body">
                 <h4>{{ room.classification | capitalize }}</h4>
                 <p>Cost per unit(Ksh): <strong>{{room.cost}}</strong></p>
-                <p>No. of Units: <strong>{{room.units}}</strong></p>
+                <p>No. of Units Available: <strong>{{room.units - room.get_booked_units()}}</strong></p>
                 <p class="card-text">{{room.details }}</p>
                
-                
-                <a class="btn btn-sm btn-outline-info btn-block text-center" target="_blank" href="#">
-                  Book
-                </a>
+                {% if (room.units - room.get_booked_units()) > 0 %}
+                <p>
+                  <a class="btn btn-sm btn-outline-info btn-block text-center" target="_blank" href="{{ url_for('main.book',id=room.id)}}">
+                    Book
+                  </a>
+                </p>
+                {%endif%} 
                 
             </div>
         </div>

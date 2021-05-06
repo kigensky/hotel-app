@@ -205,12 +205,22 @@ def editbooking(id):
             
             total_cost = int(booking.room.cost) * days_stayed * int(form.units.data)    # cost of room*day_stayed*units booked
 
-            booking = Booking.query.filter_by(id=int(id)).update({'units': form.units.data,
-                                                        'cost':total_cost,
-                                                        'from_date':datetime.fromtimestamp(int(from_date_timestamp)).strftime('%d-%m-%Y'),
-                                                        'to_date': datetime.fromtimestamp(int(to_date_timestamp)).strftime('%d-%m-%Y'),
-                                                        'created_at': datetime.today().strftime('%d-%m-%Y %H:%M')})
-         
+            # booking = Booking.query.filter_by(id=int(id)).update({'units': form.units.data,
+            #                                             'cost':total_cost,
+            #                                             'from_date':datetime.fromtimestamp(int(from_date_timestamp)).strftime('%d-%m-%Y'),
+            #                                             'to_date': datetime.fromtimestamp(int(to_date_timestamp)).strftime('%d-%m-%Y'),
+            #                                             'created_at': datetime.today().strftime('%d-%m-%Y %H:%M')})
+            booking = Booking.query.get(int(id))
+            booking.units= form.units.data
+            booking.cost=total_cost
+            booking.from_date=datetime.fromtimestamp(int(from_date_timestamp)).strftime('%d-%m-%Y')
+            booking.to_date = datetime.fromtimestamp(int(to_date_timestamp)).strftime('%d-%m-%Y')
+            # rooms_id = booking.rooms_id,
+            # users_id = current_user.id,
+            booking.created_at = datetime.today().strftime('%d-%m-%Y %H:%M')
+
+
+            db.session.add(booking)
             db.session.commit()
 
             flash('Update was successful','success')

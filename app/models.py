@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     pass_secure = db.Column(db.String(255))
     # bio = db.Column(db.String())
     # profile_pic_path = db.Column(db.String())
-    # posts = db.relationship('Post',backref = 'user',lazy="dynamic")
+    bookings = db.relationship('Booking',backref = 'user',lazy="dynamic")
     @property
     def password(self):
         raise AttributeError('You cannot read the password attribute')
@@ -59,6 +59,27 @@ class Room(db.Model):
     cost = db.Column(db.String(255))
     units = db.Column(db.Integer)
     image = db.Column(db.Text)
+    bookings = db.relationship('Booking',backref = 'room',lazy="dynamic")
 
     def __repr__(self):
         return f'Room {self.classification} {self.cost} {self.units}'
+        
+
+class Booking(db.Model):
+    __tablename__ = 'bookings'
+    
+    id = db.Column(db.Integer,primary_key = True)
+    units = db.Column(db.Integer)
+    cost = db.Column(db.Integer)
+    from_date = db.Column(db.Integer)
+    to_date = db.Column(db.Integer)
+    rooms_id = db.Column(db.Integer, db.ForeignKey('rooms.id'), nullable=False)
+    users_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    created_at = db.Column(db.Text)
+    
+    def __repr__(self):
+        return f'Booking {self.user.username} {self.units}'
+    
+    
+    
+    

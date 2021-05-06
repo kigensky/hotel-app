@@ -35,7 +35,7 @@ class DevConfig(Config):
         Config: The parent configuration class with General configuration settings
     '''
     #SQLALCHEMY_DATABASE_URI = os.environ.get("SQLALCHEMY_DATABASE_URI")
-    SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://kenneth:admin@localhost/hotelapp'
+    SQLALCHEMY_DATABASE_URI='postgresql+psycopg2://kigen:29584933@localhost/hotelapp'
     
     
     DEBUG = True

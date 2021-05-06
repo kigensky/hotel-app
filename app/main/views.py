@@ -3,7 +3,7 @@ from . import main
 from ..models import User, Room
 from .. import photos
 from flask_login import login_required, current_user
-from .forms import RoomForm
+from .forms import RoomForm, BookingForm
 # from datetime import datetime
 # import bleach
 from .. import db
@@ -110,5 +110,13 @@ def deleteroom(id):
     flash('Room deleted successfully','success')
 
     return redirect( url_for('main.home'))
+    
+
+
+@main.route('/book/<id>', methods = ["GET","POST"])
+@login_required
+def book(id):
+    form = BookingForm()
+    return render_template('booking.html', booking_form = form)
 
 

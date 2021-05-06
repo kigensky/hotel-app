@@ -12,7 +12,7 @@
     {% if current_user.is_authenticated %}
       {% if user.isAdmin() %}
             <div class="float-right ml-2">
-              <a href="#" class="btn btn-sm btn-info" target="_blank">
+              <a href="{{ url_for('main.allbookings')}}" class="btn btn-sm btn-info" target="_blank">
                 Bookings
                 <i class="fa fa-bed" aria-hidden="true"></i>
               </a>

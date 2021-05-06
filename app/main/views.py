@@ -238,3 +238,32 @@ def deletebooking(id):
 
     return redirect(url_for('main.mybookings',id=current_user.id))
 
+
+
+@main.route('/allbookings')
+@login_required
+def allbookings():
+    if current_user.isAdmin() == False:         #check if user is or isnt admin
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    bookings = Booking.query.all()
+    
+
+    return render_template('allbookings.html',bookings=bookings)
+
+@main.route('/admindeletebooking/<id>')
+@login_required
+def admindeletebooking(id):
+    if current_user.isAdmin() == False:         #check if user is or isnt customer
+        flash('Permission denied.','danger')
+        return redirect( url_for('main.home'))
+
+    booking = Booking.query.get(int(id))
+
+    db.session.delete(booking)
+    db.session.commit()
+
+    flash('Booking deleted successfully','success')
+
+    return redirect(url_for('main.allbookings'))

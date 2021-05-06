@@ -1,12 +1,13 @@
 from flask import render_template, request, redirect, url_for, abort,flash
 from . import main
-from ..models import User, Room
+from ..models import User, Room, Booking
 from .. import photos
 from flask_login import login_required, current_user
 from .forms import RoomForm, BookingForm
 # from datetime import datetime
 # import bleach
 from .. import db
+from datetime import datetime
 # from ..requests import get_quote
 # from ..email import welcome_message, notification_message
 
@@ -117,6 +118,38 @@ def deleteroom(id):
 @login_required
 def book(id):
     form = BookingForm()
+
+    if form.validate_on_submit():
+        
+        room = Room.query.get(int(id))
+
+        available_rooms = int(room.units) - int(room.get_booked_units()) #check available rooms
+
+        if int(form.units.data) <= available_rooms:
+            from_date_timestamp = datetime.strptime(str(form.from_date.data),'%Y-%m-%d' ).timestamp()
+            to_date_timestamp = datetime.strptime(str(form.to_date.data),'%Y-%m-%d' ).timestamp()
+            timestamp_diff = to_date_timestamp - from_date_timestamp
+
+            days_stayed = int(timestamp_diff)//86400  #one day = 86400 sec
+            
+            total_cost = int(room.cost) * days_stayed * int(form.units.data)    # cost of room*day_stayed*units booked
+
+            booking = Booking(units= form.units.data,
+                              cost=total_cost,
+                              from_date=datetime.fromtimestamp(int(from_date_timestamp)).strftime('%d-%m-%Y'),
+                              to_date = datetime.fromtimestamp(int(to_date_timestamp)).strftime('%d-%m-%Y'),
+                              rooms_id = room.id,
+                              users_id = current_user.id,
+                              created_at = datetime.today().strftime('%d-%m-%Y %H:%M'))
+
+
+            db.session.add(booking)
+            db.session.commit()
+
+            flash('Booking was successful','success')
+        else:
+            flash('Either rooms are fully booked or you are booking more than available units','danger')
+
     return render_template('booking.html', booking_form = form)
 
 

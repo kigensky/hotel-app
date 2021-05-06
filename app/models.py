@@ -61,6 +61,14 @@ class Room(db.Model):
     image = db.Column(db.Text)
     bookings = db.relationship('Booking',backref = 'room',lazy="dynamic")
 
+    def get_booked_units(self):
+        units_booked = 0
+
+        for booking in self.bookings:
+            units_booked+=booking.units
+        
+        return units_booked
+
     def __repr__(self):
         return f'Room {self.classification} {self.cost} {self.units}'
         
@@ -71,8 +79,8 @@ class Booking(db.Model):
     id = db.Column(db.Integer,primary_key = True)
     units = db.Column(db.Integer)
     cost = db.Column(db.Integer)
-    from_date = db.Column(db.Integer)
-    to_date = db.Column(db.Integer)
+    from_date = db.Column(db.Text)
+    to_date = db.Column(db.Text)
     rooms_id = db.Column(db.Integer, db.ForeignKey('rooms.id'), nullable=False)
     users_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.Text)

@@ -31,11 +31,11 @@
 
                    
                       <p class="mt-2">
-                        <a class="btn btn-sm btn-warning text-center float-left" target="_blank" href="#">
+                        <a class="btn btn-sm btn-warning text-center float-left" target="_blank" href="{{ url_for('main.editbooking',id=booking.id)}}">
                           <i class="fa fa-pencil-square-o mr-1" aria-hidden="true"></i>
                           Edit
                         </a>
-                        <a class="btn btn-sm btn-danger text-center float-right" href="#"  onclick="return confirm('Confirm room Delete')">
+                        <a class="btn btn-sm btn-danger text-center float-right" href="{{url_for('main.deletebooking',id=booking.id)}}"  onclick="return confirm('Confirm Delete')">
                           <i class="fa fa-trash-o mr-1" aria-hidden="true"></i>
                           Delete
                         </a>

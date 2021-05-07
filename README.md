@@ -1,5 +1,5 @@
 # Hotel Booking Application
-## Description
+## Main Description
 Welcome to hotel booking application.The application takes the selection criteria from user and display the booking list for user basing on the criteria. User can book the room if it is available. There are two different types of user roles for the application they are administrator and normal user.
 ## Author
 - [Kenneth Thumi](https://github.com/KenThumi)
